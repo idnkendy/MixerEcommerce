@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Trang Chủ - MIXER</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
+  
+  <!-- CSS RIÊNG -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#B76E79",
+            "background-light": "#F9F9F9",
+            "background-dark": "#101c22",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; font-size: 20px; }
+    .header-logo img { max-width: 40px; max-height: 40px; object-fit: cover; border-radius: 50%; }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-[#222222] dark:text-gray-200 transition-colors duration-300">
+  <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
+    <div class="layout-container flex h-full grow flex-col">
+      
+      <!-- HEADER -->
+      <header class="sticky top-0 z-50 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-gray-200/80 dark:border-gray-700/80">
+        <div class="mx-auto flex max-w-7xl items-center justify-between whitespace-nowrap px-4 sm:px-6 lg:px-8 py-3">
+          <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3 text-[#222222] dark:text-white">
+              <a href="index.html" class="flex items-center gap-2"><img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-10 h-10 rounded-full border"><span class="font-black text-xl">MIXER</span></a>
+            </div>
+            <div class="hidden lg:flex items-center gap-9">
+              <a class="text-[#222222] dark:text-gray-200 text-sm font-medium hover:text-primary dark:hover:text-primary" href="products.html?type=new">New In</a>
+              <a class="text-[#222222] dark:text-gray-200 text-sm font-medium hover:text-primary dark:hover:text-primary" href="products.html?type=women">Women</a>
+              <a class="text-[#222222] dark:text-gray-200 text-sm font-medium hover:text-primary dark:hover:text-primary" href="products.html?type=men">Men</a>
+              <a class="text-[#222222] dark:text-gray-200 text-sm font-medium hover:text-primary text-red-500" href="products.html?type=sale">Sale</a>
+              <a class="text-[#222222] dark:text-gray-200 text-sm font-bold border-b-2 border-transparent hover:border-primary hover:text-primary transition-all" href="products.html?type=all">All Products</a>
+            </div>
+          </div>
+          
+          <div class="flex flex-1 justify-end gap-2 sm:gap-4 items-center">
+            <!-- Search Bar cũ giữ nguyên -->
+            <div class="hidden sm:flex flex-col min-w-40 !h-10 max-w-64 relative">
+              <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                <div class="text-gray-500 dark:text-gray-400 flex border-none bg-gray-200/60 dark:bg-gray-800/60 items-center justify-center pl-3 rounded-l-lg border-r-0">
+                  <span class="material-symbols-outlined">search</span>
+                </div>
+                <input id="search-input-trie" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#222222] dark:text-gray-200 focus:outline-0 focus:ring-2 focus:ring-primary/50 border-none bg-gray-200/60 dark:bg-gray-800/60 h-full placeholder:text-gray-500 px-4 rounded-l-none border-l-0 pl-2 text-sm" placeholder="Search..." value="" />
+              </div>
+              <div id="autocomplete-results" class="absolute top-full left-0 w-full bg-white dark:bg-gray-800 shadow-xl rounded-lg mt-1 hidden border dark:border-gray-700 z-50 overflow-hidden"></div>
+            </div>
+
+            <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors">
+              <span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span>
+            </button>
+
+            <!-- AUTH CONTAINER -->
+            <div id="auth-container" class="flex items-center gap-2">
+              <button id="login-btn" onclick="signInWithGoogle()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+                <i class="fa-brands fa-google text-sm dark:text-white"></i>
+              </button>
+              <div id="user-info" class="hidden flex items-center gap-3">
+                <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-primary/50 object-cover">
+                <button onclick="handleSignOut()" class="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">LOGOUT</button>
+              </div>
+            </div>
+            
+            <a href="cart.html" class="flex relative items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20">
+              <span class="material-symbols-outlined dark:text-white">shopping_bag</span> 
+              <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full hidden border-2 border-white shadow-sm">0</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1">
+        <div class="px-4 sm:px-6 lg:px-8 py-10 flex flex-1 justify-center">
+          <div class="layout-content-container flex flex-col max-w-7xl flex-1 gap-12">
+            
+            <!-- HERO SECTION -->
+            <div class="w-full">
+              <div class="flex min-h-[520px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-xl items-center justify-center p-4 text-center"
+                style='background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://down-bs-vn.img.susercontent.com/4245466651b3b151516679ae6cdb46c0.webp");'>
+                <div class="flex flex-col gap-4">
+                  <h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] sm:text-6xl">
+                    The Fall Collection Is Here
+                  </h1>
+                  <h2 class="text-white text-base font-normal leading-normal sm:text-lg max-w-2xl mx-auto">
+                    Discover timeless pieces designed for the modern wardrobe. Elegance and comfort, redefined.
+                  </h2>
+                </div>
+                <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 transition-colors">
+                  <a href="products.html?type=all" class="truncate">Shop Now</a>
+                </button>
+              </div>
+            </div>
+
+            <!-- FEATURED PRODUCTS -->
+            <div>
+              <h2 class="text-[#222222] dark:text-white text-2xl sm:text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4 pt-5 text-center">
+                  Featured New Arrivals
+              </h2>
+              <div class="px-4 sm:px-6 lg:px-8">
+                  <!-- ID: featured-grid để JS đổ dữ liệu vào -->
+                  <div id="featured-grid" class="grid grid-cols-2 md:grid-cols-4 items-stretch py-4 gap-4">
+                      <!-- Dữ liệu sẽ được load từ Supabase -->
+                      <p class="text-center col-span-full dark:text-gray-400">Loading featured products...</p>
+                  </div>
+              </div>
+            </div>
+
+            <!-- SHOP BY CATEGORY -->
+            <div>
+              <h2 class="text-[#222222] dark:text-white text-2xl sm:text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4 pt-5 text-center">
+                Shop By Category
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+                <a class="group relative overflow-hidden rounded-xl" href="products.html?type=women">
+                  <div class="bg-cover bg-center flex flex-col gap-3 justify-end p-6 aspect-[3/4] transition-transform duration-300 group-hover:scale-105"
+                    style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 40%), url("https://down-vn.img.susercontent.com/file/vn-11134207-820l4-mf0javjh2fimf2.webp");'>
+                    <p class="text-white text-xl font-bold leading-tight">Women</p>
+                  </div>
+                </a>
+                <a class="group relative overflow-hidden rounded-xl" href="products.html?type=men">
+                  <div class="bg-cover bg-center flex flex-col gap-3 justify-end p-6 aspect-[3/4] transition-transform duration-300 group-hover:scale-105"
+                    style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 40%), url("https://image.uniqlo.com/UQ/ST3/jp/imagesother/000_PLP/PUFFTECH/25FW/men/LineupBanner-m-jacket-sp-1.jpg");'>
+                    <p class="text-white text-xl font-bold leading-tight">Men</p>
+                  </div>
+                </a>
+                <a class="group relative overflow-hidden rounded-xl" href="products.html?type=new">
+                  <div class="bg-cover bg-center flex flex-col gap-3 justify-end p-6 aspect-[3/4] transition-transform duration-300 group-hover:scale-105"
+                    style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 40%), url("https://img.vuahanghieu.com/unsafe/0x0/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/news/content/2023/09/outerwear-la-gi-15-mau-outerwear-dep-duoc-yeu-thich-nhat-15-jpg-1695716947-26092023152907.jpg");'>
+                    <p class="text-white text-xl font-bold leading-tight">New In</p>
+                  </div>
+                </a>
+                <a class="group relative overflow-hidden rounded-xl" href="products.html?type=sale">
+                  <div class="bg-cover bg-center flex flex-col gap-3 justify-end p-6 aspect-[3/4] transition-transform duration-300 group-hover:scale-105"
+                    style='background-image: linear-gradient(0deg, rgba(183, 110, 121, 0.7) 0%, rgba(183, 110, 121, 0.3) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDgL1Pd5QBA0JEiCEbNRpkmpPNed-uyahWBEwJ6lUMpVv9Ru8cQrl_Ls0PSL0aNfm5EEp0a8-5iBhupHWRrwukHW6sIZHF1kvIvi5TQlU3MmuV6Oki02jXC-AJciNe75quWEwq4DCqWOirNthsQ_c1Ec3os5nvAc2tYR6C5dFjuzWiIoMJ3yPVftzd-YE8IWjIb4jGqDQB3jp2ZVmp1OsSFoVax3j86OgmN56OMWZr-FhTQm3rFNQXBG6FoBZklgaJHdLtkG56xfPQ");'>
+                    <p class="text-white text-xl font-bold leading-tight">Sale</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- MOST POPULAR (Thêm ID popular-grid) -->
+            <div>
+              <h2 class="text-[#222222] dark:text-white text-2xl sm:text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4 pt-5 text-center">
+                Most Popular
+              </h2>
+              <div class="px-4 sm:px-6 lg:px-8">
+                  <div id="popular-grid" class="grid grid-cols-2 md:grid-cols-4 items-stretch py-4 gap-4">
+                  </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+
+      <!-- FOOTER -->
+      <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+             <div class="flex flex-col gap-4">
+                <h3 class="text-lg font-bold text-[#222222] dark:text-white">Mixer</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Timeless fashion for the modern individual.</p>
+             </div>
+             <!-- ... Các cột footer khác giữ nguyên ... -->
+             <div class="flex flex-col gap-4">
+                <h4 class="font-semibold text-[#222222] dark:text-white">Stay Connected</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Join our newsletter.</p>
+             </div>
+          </div>
+          <div class="border-t border-gray-200 dark:border-gray-800 mt-8 pt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>© 2024 MIXER. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- LIÊN KẾT JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/algorithms.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/ui-helpers.js"></script>
+  <script src="js/cart-logic.js"></script>
+  <script src="js/render-pages.js"></script>
+  <script src="js/search-logic.js"></script>
+  <script src="js/algorithms-handlers.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - MIXER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B76E79',
+                        'background-light': '#FFFFFF',
+                        'background-dark': '#111827',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200/80 dark:border-gray-700/80">
+        <div class="mx-auto flex max-w-7xl items-center justify-between whitespace-nowrap px-4 sm:px-6 lg:px-8 py-3">
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3 text-gray-900 dark:text-white">
+              <a href="index.html" class="flex items-center gap-2"><img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-10 h-10 rounded-full border"><span class="font-black text-xl">MIXER</span></a>
+            </div>
+            <div class="hidden lg:flex items-center gap-9">
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=new">New In</a>
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=women">Women</a>
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=men">Men</a>
+            <a class="text-sm font-medium hover:text-primary text-red-500" href="products.html?type=sale">Sale</a>
+            <a class="text-sm font-bold text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary" href="products.html?type=all">All Products</a>
+            </div>
+        </div>
+        <div class="flex flex-1 justify-end gap-4 items-center">
+            <div class="hidden sm:flex flex-col min-w-40 !h-10 max-w-64 relative">
+                <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                <div class="text-gray-500 dark:text-gray-400 flex border-none bg-gray-200/60 dark:bg-gray-800/60 items-center justify-center pl-3 rounded-l-lg border-r-0"><span class="material-symbols-outlined">search</span></div>
+                <input id="search-input-trie" class="form-input flex w-full min-w-0 flex-1 resize-none rounded-lg focus:ring-2 focus:ring-primary/50 border-none bg-gray-200/60 dark:bg-gray-800/60 dark:text-white h-full px-4 rounded-l-none pl-2 text-sm" placeholder="Search..." />
+                </div>
+                <div id="autocomplete-results" class="absolute top-full left-0 w-full bg-white dark:bg-gray-800 shadow-xl rounded-lg mt-1 hidden border dark:border-gray-700 z-50 overflow-hidden"></div>
+            </div>
+            <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors"><span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span></button>
+            
+            <!-- AUTH CONTAINER -->
+            <div id="auth-container" class="flex items-center gap-2">
+              <button id="login-btn" onclick="signInWithGoogle()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+                <i class="fa-brands fa-google text-sm dark:text-white"></i>
+              </button>
+              <div id="user-info" class="hidden flex items-center gap-3">
+                <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-primary/50 object-cover">
+                <button onclick="handleSignOut()" class="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">LOGOUT</button>
+              </div>
+            </div>
+
+            <a href="cart.html" class="flex relative items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20">
+                <span class="material-symbols-outlined dark:text-white">shopping_bag</span>
+                <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full hidden border-2 border-white shadow-sm">0</span>
+            </a>
+        </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <nav class="flex text-sm text-gray-500 dark:text-gray-400 mb-6 items-center">
+            <a href="index.html" class="hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Home
+            </a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-900 dark:text-white font-medium">Your Cart</span>
+        </nav>
+
+        <h1 class="text-3xl font-bold mb-8 flex items-center gap-2 text-gray-900 dark:text-white">
+            <span class="material-symbols-outlined text-3xl">shopping_cart</span> Your Cart
+        </h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50 border-b dark:border-gray-700">
+                        <tr>
+                            <th class="p-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Product</th>
+                            <th class="p-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Price</th>
+                            <th class="p-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Quantity</th>
+                            <th class="p-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items-container" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
+                </table>
+            </div>
+            
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-fit sticky top-24">
+                <h3 class="font-bold text-lg mb-4 text-gray-900 dark:text-white">Order Summary</h3>
+                <div class="flex justify-between mb-2 text-gray-600 dark:text-gray-400"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+                <div class="flex justify-between mb-4 text-gray-600 dark:text-gray-400"><span>Shipping</span><span class="text-sm italic">Calculated at checkout</span></div>
+                <div class="flex justify-between font-bold text-xl mb-6 pt-4 border-t dark:border-gray-700 text-gray-900 dark:text-white"><span>Total</span><span id="cart-total">$0.00</span></div>
+                <button onclick="openCheckout()" class="w-full bg-black dark:bg-white text-white dark:text-black py-3 rounded-lg font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition shadow-lg">Proceed to Checkout</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center backdrop-blur-sm z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl w-full max-w-lg shadow-2xl animate-[fadeIn_0.3s] max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Secure Checkout</h2>
+                <button onclick="closeCheckout()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-500 dark:text-gray-400"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            
+            <form onsubmit="processCheckout(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                    <input id="checkout-name" type="text" placeholder="Nguyen Van A" required class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                        <input id="checkout-phone" type="tel" placeholder="09xxxx" required class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Payment Method</label>
+                        <select id="checkout-payment" class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <option value="COD">Cash on Delivery</option>
+                            <option value="BANK">Bank Transfer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Shipping Address</label>
+                    <input id="checkout-address" type="text" placeholder="123 Street, District, City" required class="w-full border border-gray-300 dark:border-gray-600 p-3 rounded-lg focus:ring-2 focus:ring-black dark:focus:ring-white outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                </div>
+
+                <div class="pt-4 mt-2 border-t dark:border-gray-700">
+                    <button id="btn-confirm-order" type="submit" class="w-full bg-black dark:bg-white text-white dark:text-black py-3 rounded-lg font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition shadow-md flex justify-center gap-2 items-center">
+                        <span class="material-symbols-outlined">check_circle</span> Confirm Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/ui-helpers.js"></script>
+    <script src="js/cart-logic.js"></script>
+    <script src="js/render-pages.js"></script>
+    <script src="js/search-logic.js"></script>
+    <script src="js/algorithms-handlers.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

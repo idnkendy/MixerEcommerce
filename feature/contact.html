@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Liên Hệ - MIXER</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#B76E79",
+            "background-light": "#F9F9F9",
+            "background-dark": "#101c22",
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200/80 dark:border-gray-700/80">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3 text-gray-900 dark:text-white">
+        <a href="index.html" class="flex items-center gap-2"><img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-10 h-10 rounded-full border"><span class="font-black text-xl">MIXER</span></a>
+      </div>
+      <nav class="hidden md:flex gap-6">
+        <a href="index.html" class="hover:text-primary font-medium text-gray-700 dark:text-gray-300">Home</a>
+        <a href="products.html" class="hover:text-primary font-medium text-gray-700 dark:text-gray-300">Products</a>
+        <a href="contact.html" class="hover:text-primary font-medium text-primary">Contact</a>
+      </nav>
+      <div class="flex gap-4 items-center">
+        <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors">
+            <span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span>
+        </button>
+
+        <!-- AUTH CONTAINER -->
+        <div id="auth-container" class="flex items-center gap-2">
+          <button id="login-btn" onclick="signInWithGoogle()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+            <i class="fa-brands fa-google text-sm dark:text-white"></i>
+          </button>
+          <div id="user-info" class="hidden flex items-center gap-3">
+            <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-primary/50 object-cover">
+            <button onclick="handleSignOut()" class="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">LOGOUT</button>
+          </div>
+        </div>
+
+        <a href="cart.html" class="relative flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20">
+            <span class="material-symbols-outlined dark:text-white">shopping_bag</span>
+            <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full hidden border-2 border-white shadow-sm">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-12">
+    <h2 class="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">Đăng ký nhận tin</h2>
+    <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Nhận thông báo về các sản phẩm mới nhất của Mixer.</p>
+    
+    <!-- Form Newsletter -->
+    <form id="newsletter-form" class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md border border-gray-100 dark:border-gray-700">
+        <div class="flex flex-col gap-4">
+            <label class="font-bold text-gray-900 dark:text-white">Email của bạn:</label>
+            <input id="email-input" type="email" required placeholder="vidu@gmail.com" class="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white p-3 rounded-lg focus:ring-primary focus:ring-2 outline-none">
+            <button type="submit" class="bg-primary text-white font-bold py-3 rounded-lg hover:bg-opacity-90 transition-opacity">Đăng Ký Ngay</button>
+        </div>
+    </form>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/algorithms.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/ui-helpers.js"></script>
+  <script src="js/cart-logic.js"></script>
+  <script src="js/render-pages.js"></script>
+  <script src="js/search-logic.js"></script>
+  <script src="js/algorithms-handlers.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>

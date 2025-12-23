@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail - MIXER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B76E79',
+                        'background-light': '#FFFFFF',
+                        'background-dark': '#111827',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200/80 dark:border-gray-700/80">
+        <div class="mx-auto flex max-w-7xl items-center justify-between whitespace-nowrap px-4 sm:px-6 lg:px-8 py-3">
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3 text-gray-900 dark:text-white">
+              <a href="index.html" class="flex items-center gap-2"><img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-10 h-10 rounded-full border"><span class="font-black text-xl">MIXER</span></a>
+            </div>
+            <div class="hidden lg:flex items-center gap-9">
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=new">New In</a>
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=women">Women</a>
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=men">Men</a>
+            <a class="text-sm font-medium hover:text-primary text-red-500" href="products.html?type=sale">Sale</a>
+            <a class="text-sm font-bold text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary" href="products.html?type=all">All Products</a>
+            </div>
+        </div>
+        <div class="flex flex-1 justify-end gap-4 items-center">
+            <div class="hidden sm:flex flex-col min-w-40 !h-10 max-w-64 relative">
+                <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                <div class="text-gray-500 dark:text-gray-400 flex border-none bg-gray-200/60 dark:bg-gray-800/60 items-center justify-center pl-3 rounded-l-lg border-r-0"><span class="material-symbols-outlined">search</span></div>
+                <input id="search-input-trie" class="form-input flex w-full min-w-0 flex-1 resize-none rounded-lg focus:ring-2 focus:ring-primary/50 border-none bg-gray-200/60 dark:bg-gray-800/60 dark:text-white h-full px-4 rounded-l-none pl-2 text-sm" placeholder="Search..." />
+                </div>
+                <div id="autocomplete-results" class="absolute top-full left-0 w-full bg-white dark:bg-gray-800 shadow-xl rounded-lg mt-1 hidden border dark:border-gray-700 z-50 overflow-hidden"></div>
+            </div>
+            <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors"><span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span></button>
+            
+            <!-- AUTH CONTAINER -->
+            <div id="auth-container" class="flex items-center gap-2">
+              <button id="login-btn" onclick="signInWithGoogle()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+                <i class="fa-brands fa-google text-sm dark:text-white"></i>
+              </button>
+              <div id="user-info" class="hidden flex items-center gap-3">
+                <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-primary/50 object-cover">
+                <button onclick="handleSignOut()" class="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">LOGOUT</button>
+              </div>
+            </div>
+
+            <a href="cart.html" class="flex relative items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20">
+                <span class="material-symbols-outlined dark:text-white">shopping_bag</span>
+                <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full hidden border-2 border-white shadow-sm">0</span>
+            </a>
+        </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <nav class="text-sm text-gray-500 dark:text-gray-400 mb-6 flex items-center gap-2">
+            <a href="index.html" class="hover:text-black dark:hover:text-white transition-colors">Home</a> 
+            <span class="material-symbols-outlined text-[12px]">chevron_right</span>
+            <a href="products.html?type=all" class="hover:text-black dark:hover:text-white transition-colors">Shop</a> 
+            <span class="material-symbols-outlined text-[12px]">chevron_right</span>
+            <span id="breadcrumb-name" class="text-black dark:text-white font-medium">...</span>
+        </nav>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
+            <!-- Product Image Gallery -->
+            <div class="space-y-4">
+                <div class="aspect-[3/4] w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-gray-800 relative group">
+                    <img id="detail-img" class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105" src="" alt="Product Image">
+                    <div class="absolute top-4 left-4 flex flex-col gap-2">
+                        <span id="badge-new" class="hidden bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">NEW</span>
+                        <span id="badge-sale" class="hidden bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">SALE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="flex flex-col">
+                <div class="mb-6">
+                    <span id="detail-category" class="inline-block bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3">...</span>
+                    <h1 id="detail-name" class="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white tracking-tight mb-4 leading-tight">Loading...</h1>
+                    <div class="flex items-center gap-4 mb-6">
+                        <p id="detail-price" class="text-3xl font-bold text-gray-900 dark:text-white">$0.00</p>
+                        <div class="flex text-yellow-400 text-sm">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span class="text-gray-400 ml-2 text-xs font-medium text-black dark:text-white">(4.8/5 reviews)</span>
+                        </div>
+                    </div>
+                    <p id="detail-desc" class="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">...</p>
+                </div>
+
+                <div class="h-px w-full bg-gray-200 dark:bg-gray-700 my-6"></div>
+
+                <!-- Size Selector -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-bold text-gray-900 dark:text-white">Select Size</span>
+                        <a href="#" class="text-xs text-gray-500 dark:text-gray-400 underline hover:text-black dark:hover:text-white">Size Guide</a>
+                    </div>
+                    <div class="flex gap-3" id="size-selector">
+                        <button onclick="selectSize('S')" class="size-btn w-12 h-12 rounded-xl border border-gray-200 dark:border-gray-600 dark:text-white flex items-center justify-center text-sm font-bold hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all focus:ring-2 focus:ring-black focus:ring-offset-2" data-size="S">S</button>
+                        <button onclick="selectSize('M')" class="size-btn w-12 h-12 rounded-xl border border-gray-200 dark:border-gray-600 dark:text-white flex items-center justify-center text-sm font-bold hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all focus:ring-2 focus:ring-black focus:ring-offset-2" data-size="M">M</button>
+                        <button onclick="selectSize('L')" class="size-btn w-12 h-12 rounded-xl border border-gray-200 dark:border-gray-600 dark:text-white flex items-center justify-center text-sm font-bold hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all focus:ring-2 focus:ring-black focus:ring-offset-2" data-size="L">L</button>
+                        <button onclick="selectSize('XL')" class="size-btn w-12 h-12 rounded-xl border border-gray-200 dark:border-gray-600 dark:text-white flex items-center justify-center text-sm font-bold hover:border-black dark:hover:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all focus:ring-2 focus:ring-black focus:ring-offset-2" data-size="XL">XL</button>
+                    </div>
+                    <p id="size-error" class="text-red-500 text-xs mt-2 hidden font-bold">Please select a size!</p>
+                </div>
+
+                <!-- Promotions -->
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 rounded-xl p-4 mb-6">
+                    <h4 class="font-bold text-red-600 dark:text-red-400 text-sm mb-2 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">local_offer</span> Special Offers
+                    </h4>
+                    <ul class="text-sm text-red-800 dark:text-red-300 space-y-1 list-disc pl-4">
+                        <li>Discount 20% for new members.</li>
+                        <li>Free shipping for orders over $500.</li>
+                        <li>Buy 2 get extra 5% off.</li>
+                    </ul>
+                </div>
+
+                <!-- Actions -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-6">
+                        <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg h-12 bg-white dark:bg-gray-800">
+                            <button id="qty-minus" class="w-12 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors rounded-l-lg border-r border-gray-200 dark:border-gray-600">
+                                <span class="material-symbols-outlined text-sm">remove</span>
+                            </button>
+                            <input id="qty-input" value="1" class="w-16 h-full text-center outline-none font-bold bg-transparent text-lg text-gray-900 dark:text-white" readonly>
+                            <button id="qty-plus" class="w-12 h-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors rounded-r-lg border-l border-gray-200 dark:border-gray-600">
+                                <span class="material-symbols-outlined text-sm">add</span>
+                            </button>
+                        </div>
+                        <button onclick="addToCart()" class="flex-1 bg-black dark:bg-white text-white dark:text-black h-12 rounded-xl font-bold text-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">shopping_bag</span> Add to Cart
+                        </button>
+                    </div>
+
+                    <!-- Accordion Info -->
+                    <div class="space-y-4 pt-4">
+                        <details class="group border-b border-gray-100 dark:border-gray-700 pb-4">
+                            <summary class="flex justify-between items-center font-bold cursor-pointer list-none text-gray-900 dark:text-white hover:text-black dark:hover:text-gray-300">
+                                <span>Product Description</span>
+                                <span class="transition-transform duration-300 group-open:rotate-180">
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </span>
+                            </summary>
+                            <div class="text-gray-600 dark:text-gray-300 text-sm mt-3 leading-relaxed animate-[fadeIn_0.3s]">
+                                <p id="detail-desc-full">...</p>
+                                <p class="mt-2">Designed with premium materials for maximum comfort and durability. Perfect for everyday wear or special occasions. Easy to care for and maintain.</p>
+                            </div>
+                        </details>
+                        
+                        <details class="group border-b border-gray-100 dark:border-gray-700 pb-4">
+                            <summary class="flex justify-between items-center font-bold cursor-pointer list-none text-gray-900 dark:text-white hover:text-black dark:hover:text-gray-300">
+                                <span>Shipping Policy</span>
+                                <span class="transition-transform duration-300 group-open:rotate-180">
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </span>
+                            </summary>
+                            <div class="text-gray-600 dark:text-gray-300 text-sm mt-3 leading-relaxed animate-[fadeIn_0.3s]">
+                                <p>We ship worldwide via FedEx, DHL, and UPS. Standard shipping takes 3-5 business days. Express shipping (1-2 days) is available at checkout.</p>
+                                <p class="mt-2 font-medium text-black dark:text-white">Free shipping on orders over $500.</p>
+                            </div>
+                        </details>
+
+                        <details class="group border-b border-gray-100 dark:border-gray-700 pb-4">
+                            <summary class="flex justify-between items-center font-bold cursor-pointer list-none text-gray-900 dark:text-white hover:text-black dark:hover:text-gray-300">
+                                <span>Return & Exchange</span>
+                                <span class="transition-transform duration-300 group-open:rotate-180">
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </span>
+                            </summary>
+                            <div class="text-gray-600 dark:text-gray-300 text-sm mt-3 leading-relaxed animate-[fadeIn_0.3s]">
+                                <p>We accept returns within 30 days of delivery. Items must be unworn, unwashed, and with original tags attached. Refunds are processed within 5-7 business days after we receive your return.</p>
+                            </div>
+                        </details>
+                    </div>
+
+                    <!-- Shipping Calculator -->
+                    <div class="bg-gray-50 dark:bg-gray-800 p-5 rounded-2xl border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="material-symbols-outlined text-gray-600 dark:text-gray-300">local_shipping</span>
+                            <h4 class="font-bold text-sm uppercase tracking-wide text-gray-900 dark:text-white">Shipping Estimate</h4>
+                        </div>
+                        <div class="flex gap-2">
+                            <select id="city-select" class="flex-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white p-2.5 rounded-lg text-sm outline-none focus:border-black transition-colors cursor-pointer">
+                                <option value="Hanoi">Hanoi</option>
+                                <option value="Hue">Hue</option>
+                                <option value="Danang">Danang</option>
+                                <option value="HCM">Ho Chi Minh City</option>
+                                <option value="Cantho">Can Tho</option>
+                            </select>
+                            <button onclick="calculateShipping()" class="bg-gray-900 dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-black dark:hover:bg-gray-200 transition-colors">Calculate</button>
+                        </div>
+                        <p id="shipping-result" class="text-sm mt-3 text-gray-600 dark:text-gray-300 font-medium pl-1"></p>
+                    </div>
+                    
+                    <!-- Features -->
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                            <span class="material-symbols-outlined text-green-600">check_circle</span>
+                            <span>Authentic 100%</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                            <span class="material-symbols-outlined text-green-600">published_with_changes</span>
+                            <span>30 Days Return</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <div class="mb-16">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">You May Also Like</h3>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider border px-2 py-1 rounded">AI Recommendation</span>
+            </div>
+            <div id="related-products-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+        </div>
+
+        <!-- Recently Viewed -->
+        <div class="border-t border-gray-100 dark:border-gray-700 pt-12">
+            <h3 class="font-bold text-sm text-gray-400 uppercase tracking-widest mb-6">Recently Viewed</h3>
+            <div id="recent-stack-container" class="flex gap-6 overflow-x-auto pb-6 no-scrollbar snap-x"></div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/ui-helpers.js"></script>
+    <script src="js/cart-logic.js"></script>
+    <script src="js/render-pages.js"></script>
+    <script src="js/search-logic.js"></script>
+    <script src="js/algorithms-handlers.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

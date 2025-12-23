@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - MIXER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B76E79',
+                        'background-light': '#FFFFFF',
+                        'background-dark': '#111827',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200/80 dark:border-gray-700/80">
+        <div class="mx-auto flex max-w-7xl items-center justify-between whitespace-nowrap px-4 sm:px-6 lg:px-8 py-3">
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3 text-gray-900 dark:text-white">
+              <a href="index.html" class="flex items-center gap-2"><img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-10 h-10 rounded-full border"><span class="font-black text-xl">MIXER</span></a>
+            </div>
+            <div class="hidden lg:flex items-center gap-9">
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=new">New In</a>
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=women">Women</a>
+            <a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="products.html?type=men">Men</a>
+            <a class="text-sm font-medium hover:text-primary text-red-500" href="products.html?type=sale">Sale</a>
+            <a class="text-sm font-bold text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary" href="products.html?type=all">All Products</a>
+            </div>
+        </div>
+        <div class="flex flex-1 justify-end gap-4 items-center">
+            <div class="hidden sm:flex flex-col min-w-40 !h-10 max-w-64 relative">
+                <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                <div class="text-gray-500 dark:text-gray-400 flex border-none bg-gray-200/60 dark:bg-gray-800/60 items-center justify-center pl-3 rounded-l-lg border-r-0"><span class="material-symbols-outlined">search</span></div>
+                <input id="search-input-trie" class="form-input flex w-full min-w-0 flex-1 resize-none rounded-lg focus:ring-2 focus:ring-primary/50 border-none bg-gray-200/60 dark:bg-gray-800/60 dark:text-white h-full px-4 rounded-l-none pl-2 text-sm" placeholder="Search..." />
+                </div>
+                <div id="autocomplete-results" class="absolute top-full left-0 w-full bg-white dark:bg-gray-800 shadow-xl rounded-lg mt-1 hidden border dark:border-gray-700 z-50 overflow-hidden"></div>
+            </div>
+            <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors"><span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span></button>
+            
+            <!-- AUTH CONTAINER -->
+            <div id="auth-container" class="flex items-center gap-2">
+              <button id="login-btn" onclick="signInWithGoogle()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+                <i class="fa-brands fa-google text-sm dark:text-white"></i>
+              </button>
+              <div id="user-info" class="hidden flex items-center gap-3">
+                <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-primary/50 object-cover">
+                <button onclick="handleSignOut()" class="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">LOGOUT</button>
+              </div>
+            </div>
+
+            <a href="cart.html" class="flex relative items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20">
+                <span class="material-symbols-outlined dark:text-white">shopping_bag</span>
+                <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full hidden border-2 border-white shadow-sm">0</span>
+            </a>
+        </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <nav class="flex text-sm text-gray-500 dark:text-gray-400 mb-6">
+            <a href="index.html" class="hover:text-primary flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">home</span> Home
+            </a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-900 dark:text-white font-medium">Shop</span>
+        </nav>
+
+    
+        <h1 id="page-title" class="text-3xl font-black mb-6 text-center uppercase tracking-tight text-gray-900 dark:text-white">Shop</h1>
+        
+        <!-- Algorithm Control Panel -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-8 space-y-6">
+            <div class="flex flex-wrap gap-6 items-center justify-between">
+                
+                <!-- SORT -->
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Sort Algorithm (MergeSort)</span>
+                    <select id="sort-select" onchange="handleSortChange()" class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-gray-50 dark:bg-gray-700 dark:text-white focus:border-black outline-none cursor-pointer hover:bg-white dark:hover:bg-gray-600 transition">
+                        <option value="default">Default</option>
+                        <option value="asc">Price: Low to High</option>
+                        <option value="desc">Price: High to Low</option>
+                    </select>
+                </div>
+
+                <!-- FILTER -->
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Filter (Binary Search)</span>
+                    <div class="flex items-center gap-2">
+                        <input id="min-price" type="number" placeholder="Min $" class="w-20 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-black dark:bg-gray-700 dark:text-white">
+                        <span class="text-gray-400">-</span>
+                        <input id="max-price" type="number" placeholder="Max $" class="w-20 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-black dark:bg-gray-700 dark:text-white">
+                        <button onclick="filterByBinarySearch()" class="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-800 dark:hover:bg-gray-200 transition">Go</button>
+                    </div>
+                </div>
+
+                <!-- AI BUTTON -->
+                <div class="flex flex-col gap-1 justify-end h-full">
+                     <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Machine Learning</span>
+                    <button onclick="runKMeans()" class="bg-purple-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow-md hover:bg-purple-700 transition flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">hub</span> Auto-Cluster (K-Means)
+                    </button>
+                </div>
+            </div>
+
+            <!-- BUDGET TOOL -->
+            <div class="flex items-center gap-4 border-t dark:border-gray-700 pt-4 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-xl transition-colors">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-gray-500 dark:text-gray-400">savings</span>
+                    <span class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Smart Budget (Knapsack)</span>
+                </div>
+                <input id="budget-input" type="number" placeholder="Enter your limit ($)" class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm w-40 focus:border-indigo-500 outline-none bg-white dark:bg-gray-700 dark:text-white transition-colors">
+                <button onclick="runBudgetTool()" class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-indigo-700 transition shadow-sm">Optimize</button>
+                
+                <!-- Result Area -->
+                <div id="budget-result" class="hidden flex-1 flex gap-4 items-center ml-4 animate-[fadeIn_0.5s] overflow-hidden">
+                    <div id="budget-items" class="flex gap-3 overflow-x-auto pb-2 px-1 scrollbar-hide mask-linear"></div>
+                    <div id="budget-total" class="text-lg font-black ml-auto bg-white dark:bg-gray-800 dark:text-white px-4 py-2 rounded-xl border dark:border-gray-600 shadow-sm transition-colors whitespace-nowrap text-right"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-6 flex items-center gap-2">
+            <span class="text-xs font-bold text-gray-400 uppercase">Trending Keywords (Hash Table):</span>
+            <span id="trending-tags" class="flex gap-2 flex-wrap"></span>
+        </div>
+
+        <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <!-- JS will render items here -->
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/ui-helpers.js"></script>
+    <script src="js/cart-logic.js"></script>
+    <script src="js/render-pages.js"></script>
+    <script src="js/search-logic.js"></script>
+    <script src="js/algorithms-handlers.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
