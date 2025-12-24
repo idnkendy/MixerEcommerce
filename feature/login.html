@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - MIXER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B76E79',
+                        'background-light': '#FFFFFF',
+                        'background-dark': '#111827',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+
+    <script>
+        var SUPABASE_URL = 'https://cetywrkfahvecizidkgz.supabase.co'; 
+        var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNldHl3cmtmYWh2ZWNpemlka2d6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4Mzg0MTYsImV4cCI6MjA4MDQxNDQxNn0.w1YHXLrtNd4ZkpUhxp5-S5wa0jkQEArh7FsAdIHBsp8';
+        
+        window.signInWithGoogle = async function() {
+            console.log("⏳ Đang đợi thư viện Supabase tải...");
+            if (window.supabase && window.supabase.auth) {
+                const { data, error } = await window.supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: { redirectTo: window.location.origin + '/feature/login.html' }
+                });
+                if (error) alert("Lỗi: " + error.message);
+            } else {
+                alert("Hệ thống chưa sẵn sàng, vui lòng thử lại sau vài giây.");
+            }
+        };
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    
+    <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200/80 dark:border-gray-700/80">
+        <div class="mx-auto flex max-w-7xl items-center justify-between whitespace-nowrap px-4 sm:px-6 lg:px-8 py-3">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-10 h-10 rounded-full border">
+                <span class="font-black text-xl">MIXER</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="min-h-screen flex items-center justify-center px-4">
+        <div class="w-full max-w-md">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
+                <div class="text-center mb-8">
+                    <img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-16 h-16 rounded-full border-2 border-primary mx-auto mb-4">
+                    <h1 class="text-3xl font-black text-gray-900 dark:text-white mb-2">MIXER</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Fashion & Style for Everyone</p>
+                </div>
+
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white dark:bg-gray-800 text-gray-500">Đăng nhập bằng tài khoản Google</span>
+                    </div>
+                </div>
+
+                <button id="google-login-btn" class="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white font-bold py-3 px-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors active:scale-95 transform duration-200">
+                    <i class="fa-brands fa-google text-lg text-red-500"></i>
+                    <span>Tiếp tục với Google</span>
+                </button>
+
+                <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6">
+                    Bằng cách đăng nhập, bạn đồng ý với 
+                    <a href="termAndService.html" class="text-primary hover:underline">Điều khoản dịch vụ</a> 
+                    và 
+                    <a href="policies.html" class="text-primary hover:underline">Chính sách bảo mật</a>
+                </p>
+
+                <div class="text-center mt-8">
+                    <a href="index.html" class="text-primary hover:text-primary/80 font-semibold transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                        Quay lại mua sắm
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Được tin tưởng bởi hàng ngàn khách hàng</p>
+                <div class="flex items-center justify-center gap-4 text-gray-500 dark:text-gray-400 text-xs">
+                    <div class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">verified</span>
+                        <span>100% An toàn</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">lock</span>
+                        <span>Bảo mật cao</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                        <span>Xác minh Google</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/ui-helpers.js"></script>
+    <script src="js/auth.js?v=2"></script>
+    <script>
+        console.log("🔍 Post-auth.js check:", {
+            signInWithGoogle: typeof window.signInWithGoogle,
+            supabase: typeof window.supabase
+        });
+    </script>
+    <script src="js/data.js"></script>
+    <script>
+        // Wait for all scripts to load
+        function setupLoginButton() {
+            console.log("🚀 setupLoginButton running...");
+            console.log("🔍 Global check:", {
+                signInWithGoogle: typeof window.signInWithGoogle,
+                supabase: typeof window.supabase,
+                showToast: typeof window.showToast
+            });
+
+            const googleBtn = document.getElementById('google-login-btn');
+            if (!googleBtn) {
+                console.error("❌ Google button not found in DOM!");
+                return;
+            }
+
+            googleBtn.addEventListener('click', async function(e) {
+                e.preventDefault();
+                console.log("🖱 Google button clicked");
+                
+                // Re-check functions are available
+                if (typeof window.signInWithGoogle !== 'function') {
+                    console.error("❌ window.signInWithGoogle is NOT a function. Current value:", window.signInWithGoogle);
+                    alert("Lỗi: Hệ thống đăng nhập chưa tải xong. Vui lòng đợi vài giây hoặc F5.");
+                    return;
+                }
+
+                console.log("✨ Calling window.signInWithGoogle()...");
+                try {
+                    await window.signInWithGoogle();
+                } catch (e) {
+                    console.error("❌ Error during signInWithGoogle call:", e);
+                }
+            });
+            console.log("✅ Google button listener attached");
+        }
+
+        // Setup when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupLoginButton);
+        } else {
+            setupLoginButton();
+        }
+
+        // Check auth status
+        async function checkAndRedirect() {
+            console.log("Checking auth status...");
+            // Kiểm tra xem window.supabase đã là instance chưa (có thuộc tính auth)
+            if (!window.supabase || typeof window.supabase.auth === 'undefined') {
+                console.warn("⚠ Supabase client not available yet");
+                return;
+            }
+            
+            try {
+                const { data: { session } } = await window.supabase.auth.getSession();
+                if (session?.user) {
+                    console.log("✓ User already logged in, redirecting...");
+                    window.location.href = 'index.html';
+                } else {
+                    console.log("✓ No user session found");
+                }
+            } catch (e) {
+                console.log("⚠ Error checking auth:", e);
+            }
+        }
+
+        // Check auth after delay
+        setTimeout(() => {
+            console.log("Delayed auth check...");
+            checkAndRedirect();
+        }, 2000);
+
+        // Also check on window load
+        window.addEventListener('load', () => {
+            console.log("✓ Window loaded");
+            setTimeout(checkAndRedirect, 500);
+        });
+
+        console.log("✓ Login page script initialized");
+    </script>
+</body>
+</html>

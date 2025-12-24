@@ -1,7 +1,3 @@
-// ======================================================
-// SEARCH LOGIC
-// ======================================================
-
 function initSearch() {
     const inputs = document.querySelectorAll('#search-input, #search-input-trie, .search-input-standard');
     const trieRes = document.getElementById('autocomplete-results');
@@ -37,3 +33,6 @@ function initSearch() {
         }
     });
 }
+
+window.initSearch = initSearch;
+

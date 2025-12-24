@@ -1,8 +1,4 @@
-// ======================================================
-// UI HELPERS & GLOBAL UI LOGIC
-// ======================================================
 
-// 1. THEME TOGGLE LOGIC
 function toggleTheme() {
     const html = document.documentElement;
     const isDark = html.classList.toggle('dark');
@@ -13,7 +9,7 @@ function toggleTheme() {
 function updateThemeIcon(isDark) {
     const icon = document.getElementById('theme-icon');
     if (icon) {
-        icon.innerText = isDark ? 'dark_mode' : 'light_mode';
+        icon.innerText = isDark ? 'light_mode' : 'dark_mode';
     }
 }
 
@@ -27,10 +23,14 @@ function updateThemeIcon(isDark) {
     } else {
         document.documentElement.classList.remove('dark');
     }
-    document.addEventListener('DOMContentLoaded', () => updateThemeIcon(isDark));
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => updateThemeIcon(isDark));
+    } else {
+        updateThemeIcon(isDark);
+    }
 })();
 
-// 2. TOAST NOTIFICATION SYSTEM
 function showToast(message, type = 'success') {
     let container = document.getElementById('toast-container');
     if (!container) {
@@ -67,7 +67,6 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// 3. CART UI UPDATE
 function updateCartUI() {
     const cart = JSON.parse(localStorage.getItem('mixerCart') || '[]');
     const total = cart.reduce((s, i) => s + i.quantity, 0);
@@ -79,10 +78,9 @@ function updateCartUI() {
     }
 }
 
-// 4. KEYWORDS ANALYSIS (HASH TABLE)
 function analyzeKeywords() {
     const ht = new HashTable();
-    productsData.forEach(p => {
+    window.productsData.forEach(p => {
         (p.name + " " + (p.description||"")).toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,'').split(/\s+/).forEach(w => {
             if(w.length > 3 && !['with','for','and','the','this','nhung','trong'].includes(w)) ht.set(w);
         });
@@ -91,13 +89,46 @@ function analyzeKeywords() {
     if(el) el.innerHTML = ht.getAll().slice(0, 6).map(t => `<span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border dark:border-gray-700 px-2 py-1 rounded text-xs font-medium">#${t.key}</span>`).join(' ');
 }
 
-// 5. RECENTLY VIEWED HISTORY
 function renderRecentHistory() {
     const el = document.getElementById('recent-stack-container');
     if(el) {
-        const items = JSON.parse(localStorage.getItem('recentStack')||'[]').reverse().slice(0, 4);
+        const allItems = JSON.parse(localStorage.getItem('recentStack')||'[]');
+        const params = new URLSearchParams(window.location.search);
+        const currentProductId = params.get('id');
+        const items = allItems
+            .filter(p => !currentProductId || p.id != currentProductId)
+            .reverse()
+            .slice(0, 4);
         el.className = "grid grid-cols-2 md:grid-cols-4 gap-6";
         el.innerHTML = items.length ? items.map(p => createProductCard(p)).join('') 
             : '<p class="col-span-full text-center text-gray-400 dark:text-gray-500 text-sm py-4">No recently viewed products.</p>';
     }
 }
+
+function calculateShipping() {
+    const citySelect = document.getElementById('city-select');
+    const shippingResult = document.getElementById('shipping-result');
+    
+    if (!citySelect || !shippingResult) return;
+    
+    const city = citySelect.value;
+    const shippingRates = {
+        'Hanoi': 2.5,
+        'Hue': 5,
+        'Danang': 4.5,
+        'HCM': 3.5,
+        'Cantho': 6
+    };
+    
+    const cost = shippingRates[city] || 0;
+    shippingResult.innerHTML = `<span class="font-bold text-primary">Estimated shipping: $${cost.toFixed(2)}</span>`;
+    showToast(`Shipping to ${city}: $${cost.toFixed(2)}`, 'info');
+}
+
+window.toggleTheme = toggleTheme;
+window.showToast = showToast;
+window.updateCartUI = updateCartUI;
+window.analyzeKeywords = analyzeKeywords;
+window.renderRecentHistory = renderRecentHistory;
+window.calculateShipping = calculateShipping;
+

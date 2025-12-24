@@ -1,11 +1,46 @@
-// ======================================================
-// PAGE RENDERING LOGIC
-// ======================================================
+async function trackProductView(productId) {
+    try {
+        const client = window.supabase;
+        if (client && typeof client.from === 'function') {
+            const { data, error: fetchError } = await client
+                .from('products')
+                .select('view_count')
+                .eq('id', productId)
+                .single();
+            
+            if (!fetchError && data) {
+                const newCount = (data.view_count || 0) + 1;
+                await client
+                    .from('products')
+                    .update({ view_count: newCount })
+                    .eq('id', productId);
+                console.log(`View count updated: ${productId} -> ${newCount}`);
+            }
+        }
+    } catch (e) {
+        console.warn("Failed to track view in Supabase:", e.message);
+    }
+    
+    let viewCounts = JSON.parse(localStorage.getItem('productViews') || '{}');
+    viewCounts[productId] = (viewCounts[productId] || 0) + 1;
+    localStorage.setItem('productViews', JSON.stringify(viewCounts));
+}
+
+function getProductViewCount(productId) {
+    const product = window.productsData?.find(p => p.id == productId);
+    if (product && product.view_count) {
+        return product.view_count;
+    }
+    
+    const viewCounts = JSON.parse(localStorage.getItem('productViews') || '{}');
+    return viewCounts[productId] || 0;
+}
 
 function createProductCard(p) {
+    const viewCount = getProductViewCount(p.id);
     return `
     <div class="group relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-gray-800 shadow-sm transition-all duration-300 hover:shadow-xl border border-gray-100 dark:border-gray-700">
-        <div onclick="window.location.href='product-detail.html?id=${p.id}'" 
+        <div onclick="trackProductView(${p.id}); window.location.href='product-detail.html?id=${p.id}'" 
              class="relative aspect-[3/4] w-full overflow-hidden bg-gray-100 dark:bg-gray-700 cursor-pointer">
             <img src="${p.image}" alt="${p.name}" class="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-110">
             <div class="absolute top-3 left-3 flex flex-col gap-2 z-10">
@@ -29,13 +64,17 @@ function createProductCard(p) {
                 <p class="text-lg font-black text-gray-900 dark:text-white">$${p.price}</p>
                 <span class="text-xs text-gray-400 font-medium uppercase tracking-wider bg-gray-50 dark:bg-gray-700 dark:text-gray-300 px-2 py-1 rounded-md border border-gray-100 dark:border-gray-600">${p.category}</span>
             </div>
+            <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 mt-2">
+                <span class="material-symbols-outlined text-sm">visibility</span>
+                <span>${viewCount} views</span>
+            </div>
         </div>
     </div>`;
 }
 
 function getCurrentFilteredList() {
     const params = new URLSearchParams(window.location.search);
-    let list = [...productsData];
+    let list = [...window.productsData];
     const type = params.get('type');
     if(type === 'men') list = list.filter(p => p.category === 'men');
     else if(type === 'women') list = list.filter(p => p.category === 'women');
@@ -47,6 +86,18 @@ function getCurrentFilteredList() {
         list = typeof fuzzySearch === 'function' ? fuzzySearch(list, search) : list.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
     }
     return list;
+}
+
+function getMostPopularProducts(products, limit = 4) {
+    const sorted = [...products]
+        .filter(p => p.view_count >= 0)
+        .sort((a, b) => (b.view_count || 0) - (a.view_count || 0))
+        .slice(0, limit);
+    
+    console.log("Most Popular (unsorted):", products.map(p => ({ id: p.id, name: p.name, view_count: p.view_count })));
+    console.log("Most Popular (sorted):", sorted.map(p => ({ id: p.id, name: p.name, view_count: p.view_count })));
+    
+    return sorted;
 }
 
 function renderGrid(container, items) {
@@ -61,13 +112,13 @@ function renderGrid(container, items) {
 function renderFeaturedPage() {
     const featuredGrid = document.getElementById('featured-grid');
     if(featuredGrid) {
-        let list = productsData.filter(p => p.is_new).slice(0, 4);
-        if(list.length < 4) list = productsData.slice(0, 4); 
+        let list = window.productsData.filter(p => p.is_new).slice(0, 4);
+        if(list.length < 4) list = window.productsData.slice(0, 4); 
         renderGrid(featuredGrid, list);
     }
     const popularGrid = document.getElementById('popular-grid');
     if(popularGrid) {
-        let list = [...productsData].reverse().slice(0, 4); 
+        let list = [...window.productsData].reverse().slice(0, 4); 
         renderGrid(popularGrid, list);
     }
 }
@@ -93,7 +144,7 @@ function renderDetailPage() {
     const elName = document.getElementById('detail-name');
     if(!elName) return;
     const id = parseInt(new URLSearchParams(window.location.search).get('id'));
-    const p = productsData.find(x => x.id === id);
+    const p = window.productsData.find(x => x.id === id);
     if(p) {
         document.getElementById('detail-img').src = p.image;
         elName.innerText = p.name;
@@ -106,7 +157,7 @@ function renderDetailPage() {
         recentStack.push(p);
         const relatedGrid = document.getElementById('related-products-grid');
         if(relatedGrid) {
-            const related = getRecommendedProducts(p, productsData);
+            const related = getRecommendedProducts(p, window.productsData);
             relatedGrid.innerHTML = related.map(rp => createProductCard(rp)).join('');
         }
         const q = document.getElementById('qty-input');
@@ -132,7 +183,7 @@ function renderCartPage() {
     let total = 0;
     let totalItems = 0;
     container.innerHTML = cart.map(i => {
-        const p = productsData.find(x => x.id === i.id);
+        const p = window.productsData.find(x => x.id === i.id);
         if(!p) return ''; 
         const lineTotal = p.price * i.quantity;
         total += lineTotal;
@@ -172,3 +223,14 @@ function renderCartPage() {
         summaryTitle.innerHTML = `<span class="material-symbols-outlined text-3xl">shopping_cart</span> Your Cart (${totalItems} items)`;
     }
 }
+window.createProductCard = createProductCard;
+window.getCurrentFilteredList = getCurrentFilteredList;
+window.getMostPopularProducts = getMostPopularProducts;
+window.trackProductView = trackProductView;
+window.getProductViewCount = getProductViewCount;
+window.renderGrid = renderGrid;
+window.renderFeaturedPage = renderFeaturedPage;
+window.renderProductsPage = renderProductsPage;
+window.renderDetailPage = renderDetailPage;
+window.renderCartPage = renderCartPage;
+

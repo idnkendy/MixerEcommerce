@@ -18,6 +18,18 @@
             }
         }
     </script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -47,15 +59,11 @@
             </div>
             <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors"><span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span></button>
             
-            <!-- AUTH CONTAINER -->
             <div id="auth-container" class="flex items-center gap-2">
-              <button id="login-btn" onclick="signInWithGoogle()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+              <a id="login-btn" href="login.html" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
                 <i class="fa-brands fa-google text-sm dark:text-white"></i>
-              </button>
-              <div id="user-info" class="hidden flex items-center gap-3">
-                <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-primary/50 object-cover">
-                <button onclick="handleSignOut()" class="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">LOGOUT</button>
-              </div>
+              </a>
+              <div id="user-info" class="hidden"></div>
             </div>
 
             <a href="cart.html" class="flex relative items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20">
@@ -78,13 +86,11 @@
     
         <h1 id="page-title" class="text-3xl font-black mb-6 text-center uppercase tracking-tight text-gray-900 dark:text-white">Shop</h1>
         
-        <!-- Algorithm Control Panel -->
         <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 mb-8 space-y-6">
             <div class="flex flex-wrap gap-6 items-center justify-between">
                 
-                <!-- SORT -->
                 <div class="flex flex-col gap-1">
-                    <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Sort Algorithm (MergeSort)</span>
+                    <span class="text-sm font-bold text-gray-900 dark:text-white">Sort By</span>
                     <select id="sort-select" onchange="handleSortChange()" class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-gray-50 dark:bg-gray-700 dark:text-white focus:border-black outline-none cursor-pointer hover:bg-white dark:hover:bg-gray-600 transition">
                         <option value="default">Default</option>
                         <option value="asc">Price: Low to High</option>
@@ -92,9 +98,8 @@
                     </select>
                 </div>
 
-                <!-- FILTER -->
                 <div class="flex flex-col gap-1">
-                    <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Filter (Binary Search)</span>
+                    <span class="text-sm font-bold text-gray-900 dark:text-white">Price Range</span>
                     <div class="flex items-center gap-2">
                         <input id="min-price" type="number" placeholder="Min $" class="w-20 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-black dark:bg-gray-700 dark:text-white">
                         <span class="text-gray-400">-</span>
@@ -103,25 +108,22 @@
                     </div>
                 </div>
 
-                <!-- AI BUTTON -->
                 <div class="flex flex-col gap-1 justify-end h-full">
-                     <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Machine Learning</span>
+                     <span class="text-sm font-bold text-gray-900 dark:text-white">Smart Discovery</span>
                     <button onclick="runKMeans()" class="bg-purple-600 text-white px-5 py-2 rounded-lg font-bold text-sm shadow-md hover:bg-purple-700 transition flex items-center gap-2">
-                        <span class="material-symbols-outlined text-sm">hub</span> Auto-Cluster (K-Means)
+                        <span class="material-symbols-outlined text-sm">auto_awesome</span> Auto-Group
                     </button>
                 </div>
             </div>
 
-            <!-- BUDGET TOOL -->
             <div class="flex items-center gap-4 border-t dark:border-gray-700 pt-4 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-xl transition-colors">
                 <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-gray-500 dark:text-gray-400">savings</span>
-                    <span class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Smart Budget (Knapsack)</span>
+                    <span class="material-symbols-outlined text-gray-500 dark:text-gray-400">wallet</span>
+                    <span class="text-sm font-bold text-gray-900 dark:text-white">Budget Optimizer</span>
                 </div>
                 <input id="budget-input" type="number" placeholder="Enter your limit ($)" class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm w-40 focus:border-indigo-500 outline-none bg-white dark:bg-gray-700 dark:text-white transition-colors">
-                <button onclick="runBudgetTool()" class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-indigo-700 transition shadow-sm">Optimize</button>
+                <button onclick="runBudgetTool()" class="bg-indigo-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold hover:bg-indigo-700 transition shadow-sm">Find Deals</button>
                 
-                <!-- Result Area -->
                 <div id="budget-result" class="hidden flex-1 flex gap-4 items-center ml-4 animate-[fadeIn_0.5s] overflow-hidden">
                     <div id="budget-items" class="flex gap-3 overflow-x-auto pb-2 px-1 scrollbar-hide mask-linear"></div>
                     <div id="budget-total" class="text-lg font-black ml-auto bg-white dark:bg-gray-800 dark:text-white px-4 py-2 rounded-xl border dark:border-gray-600 shadow-sm transition-colors whitespace-nowrap text-right"></div>
@@ -135,15 +137,14 @@
         </div>
 
         <div id="product-grid" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <!-- JS will render items here -->
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/algorithms.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/data.js"></script>
     <script src="js/ui-helpers.js"></script>
+    <script src="js/auth.js?v=2"></script>
+    <script src="js/data.js"></script>
     <script src="js/cart-logic.js"></script>
     <script src="js/render-pages.js"></script>
     <script src="js/search-logic.js"></script>

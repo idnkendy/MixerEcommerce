@@ -1,4 +1,3 @@
-// --- 1. MERGE SORT (Sắp xếp giá) ---
 function mergeSort(arr, key, order = 'asc') {
     if (arr.length <= 1) return arr;
     const mid = Math.floor(arr.length / 2);
@@ -14,7 +13,6 @@ function merge(left, right, key, order) {
     return result.concat(left.slice(l)).concat(right.slice(r));
 }
 
-// --- 2. LEVENSHTEIN DISTANCE (Fuzzy Search) ---
 function fuzzySearch(products, keyword) {
     const threshold = 3; 
     return products.filter(p => {
@@ -33,7 +31,6 @@ function fuzzySearch(products, keyword) {
     });
 }
 
-// --- 3. JACCARD SIMILARITY (Gợi ý sản phẩm) ---
 function getRecommendedProducts(current, all) {
     function getJaccard(s1, s2) {
         const set1 = new Set(s1.toLowerCase().split(' ')), set2 = new Set(s2.toLowerCase().split(' '));
@@ -46,7 +43,6 @@ function getRecommendedProducts(current, all) {
     return mergeSort(scored, 'score', 'desc').slice(0, 4);
 }
 
-// --- 4. KNAPSACK PROBLEM (Tối ưu ngân sách) ---
 function budgetShoppingOptimizer(budget, products) {
     const n = products.length, W = Math.floor(budget), prices = products.map(p => Math.floor(p.price));
     let dp = Array(n + 1).fill().map(() => Array(W + 1).fill(0));
@@ -63,7 +59,6 @@ function budgetShoppingOptimizer(budget, products) {
     return selected;
 }
 
-// --- 5. TRIE (Autocomplete) ---
 class TrieNode { constructor() { this.children = {}; this.isEnd = false; this.data = null; } }
 class Trie {
     constructor() { this.root = new TrieNode(); }
@@ -90,7 +85,6 @@ class Trie {
     }
 }
 
-// --- 6. STACK (Lịch sử xem) ---
 class ProductStack {
     constructor(limit = 5) { 
         this.items = JSON.parse(localStorage.getItem('recentStack') || '[]'); 
@@ -105,7 +99,6 @@ class ProductStack {
     get() { return [...this.items].reverse(); }
 }
 
-// --- 7. GRAPH & DIJKSTRA (Phí Ship) ---
 class Graph {
     constructor() { this.edges = {}; }
     addEdge(u, v, w) { 
@@ -136,7 +129,6 @@ shipGraph.addEdge('Hanoi', 'Hue', 700); shipGraph.addEdge('Hue', 'Danang', 100);
 shipGraph.addEdge('Danang', 'HCM', 900); shipGraph.addEdge('HCM', 'Cantho', 150);
 shipGraph.addEdge('Warehouse', 'HCM', 1700);
 
-// --- 8. BINARY SEARCH (Lọc giá) ---
 function binarySearchRange(sortedArr, min, max) {
     function findBound(arr, val, type) {
         let l = 0, h = arr.length;
@@ -149,7 +141,6 @@ function binarySearchRange(sortedArr, min, max) {
     return sortedArr.slice(findBound(sortedArr, min, 'lower'), findBound(sortedArr, max, 'upper'));
 }
 
-// --- 9. K-MEANS CLUSTERING (Phân cụm) ---
 function kMeansClustering(products, k = 3) {
     if (products.length < k) return [products];
     let centroids = products.slice(0, k).map(p => p.price);
@@ -166,7 +157,6 @@ function kMeansClustering(products, k = 3) {
     return clusters.sort((a, b) => (a[0]?.price || 0) - (b[0]?.price || 0));
 }
 
-// --- 10. HASH TABLE (Từ khóa) ---
 class HashTable {
     constructor() { this.table = {}; }
     set(key) { this.table[key] = (this.table[key] || 0) + 1; }

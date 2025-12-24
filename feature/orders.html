@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn Hàng Của Tôi - MIXER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B76E79',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    
+    <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200/80 dark:border-gray-700/80">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://upload.wikimedia.org/wikipedia/vi/a/a5/Mixigaming-Logo.jpg" class="w-10 h-10 rounded-full border">
+                <span class="font-black text-xl">MIXER</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span>
+                </button>
+                
+                <div id="auth-container" class="flex items-center gap-2">
+                    <a id="login-btn" href="login.html" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+                        <i class="fa-brands fa-google text-sm dark:text-white"></i>
+                    </a>
+                    <div id="user-info" class="hidden"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-12">
+        <div class="flex items-center gap-2 mb-8 text-sm text-gray-600 dark:text-gray-400">
+            <a href="index.html" class="hover:text-primary dark:hover:text-primary transition-colors">Home</a>
+            <span>/</span>
+            <span class="text-gray-900 dark:text-white font-medium">History Order</span>
+        </div>
+
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-black flex items-center gap-3">
+                <span class="material-symbols-outlined text-3xl text-primary">package_2</span>
+                Lịch sử đơn hàng
+            </h1>
+            <p id="order-count" class="text-gray-500 dark:text-gray-400 font-medium">0 đơn hàng</p>
+        </div>
+
+        <div id="orders-container" class="space-y-6">
+            <div id="orders-loading" class="text-center py-20">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+                <p class="text-gray-500 dark:text-gray-400">Đang tải danh sách đơn hàng...</p>
+            </div>
+
+            <div id="orders-empty" class="hidden text-center py-20 bg-white dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700">
+                <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">shopping_cart_off</span>
+                <h3 class="text-xl font-bold mb-2">Bạn chưa có đơn hàng nào</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-6">Hãy khám phá các sản phẩm mới nhất của chúng tôi!</p>
+                <a href="products.html?type=all" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-primary/90 transition-all">
+                    Tiếp tục mua sắm
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <div id="order-detail-modal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center backdrop-blur-sm z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl w-full max-w-2xl shadow-2xl animate-[fadeIn_0.3s] max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    Chi tiết đơn hàng
+                </h2>
+                <button onclick="closeOrderDetail()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-500 dark:text-gray-400">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <div id="order-detail-content" class="space-y-6">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/ui-helpers.js"></script>
+    <script src="js/auth.js?v=2"></script>
+    <script src="js/data.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>

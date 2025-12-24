@@ -18,6 +18,18 @@
             }
         }
     </script>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
     <script src="https://kit.fontawesome.com/e13369e520.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/style.css">
@@ -47,15 +59,11 @@
             </div>
             <button id="theme-toggle" onclick="toggleTheme()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors"><span class="material-symbols-outlined dark:text-white" id="theme-icon">light_mode</span></button>
             
-            <!-- AUTH CONTAINER -->
             <div id="auth-container" class="flex items-center gap-2">
-              <button id="login-btn" onclick="signInWithGoogle()" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
+              <a id="login-btn" href="login.html" class="flex items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20 transition-colors" title="Đăng nhập bằng Google">
                 <i class="fa-brands fa-google text-sm dark:text-white"></i>
-              </button>
-              <div id="user-info" class="hidden flex items-center gap-3">
-                <img id="user-avatar" src="" class="w-8 h-8 rounded-full border border-primary/50 object-cover">
-                <button onclick="handleSignOut()" class="text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">LOGOUT</button>
-              </div>
+              </a>
+              <div id="user-info" class="hidden"></div>
             </div>
 
             <a href="cart.html" class="flex relative items-center justify-center rounded-full size-10 bg-gray-200/60 dark:bg-gray-800/60 hover:bg-primary/20">
@@ -104,7 +112,6 @@
         </div>
     </main>
 
-    <!-- CHECKOUT MODAL -->
     <div id="checkout-modal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center backdrop-blur-sm z-50 p-4">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl w-full max-w-lg shadow-2xl animate-[fadeIn_0.3s] max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -148,9 +155,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/algorithms.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/data.js"></script>
     <script src="js/ui-helpers.js"></script>
+    <script src="js/auth.js?v=2"></script>
+    <script src="js/data.js"></script>
     <script src="js/cart-logic.js"></script>
     <script src="js/render-pages.js"></script>
     <script src="js/search-logic.js"></script>

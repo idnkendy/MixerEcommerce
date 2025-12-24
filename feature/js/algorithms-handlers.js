@@ -1,7 +1,3 @@
-// ======================================================
-// ALGORITHMS HANDLERS (SORT, FILTER, ML)
-// ======================================================
-
 window.handleSortChange = function() {
     const sortValue = document.getElementById('sort-select').value;
     const grid = document.getElementById('product-grid');
