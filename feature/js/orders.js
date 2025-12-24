@@ -123,6 +123,9 @@ function renderOrders(orders) {
                 <div class="flex items-center gap-2">
                     <div class="p-2 bg-primary/10 rounded-lg hidden sm:block">
                         <span class="material-symbols-outlined text-primary text-[18px]">receipt_long</span>
+                    </div>
+                    <span class="font-bold text-sm text-gray-900 dark:text-white truncate" title="${order.id}">#${order.id.slice(0, 8)}</span>
+                </div>
             </div>
 
             <div class="col-span-12 md:col-span-2 flex items-center gap-3 md:gap-0">
