@@ -20,7 +20,7 @@ async function signInWithGoogle() {
         console.log("✓ Attempting Google sign-in...");
         const { data, error } = await client.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: window.location.origin + '/feature/login.html' }
+            options: { redirectTo: window.location.origin + '/login.html' }
         });
         if (error) throw error;
     } catch (e) {
